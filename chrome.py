@@ -16,6 +16,7 @@ import re
 import subprocess
 import sys
 
+# Both can be overridden with environment variables, which the tests rely on.
 CHROME_DIR = os.environ.get("chrome_dir") or os.path.expanduser(
     "~/Library/Application Support/Google/Chrome"
 )
@@ -26,7 +27,9 @@ DOMAIN_RE = re.compile(r"^(localhost|[\w-]+(\.[\w-]+)+)(:\d+)?([/?#]\S*)?$", re.
 
 
 def emit(items):
-    json.dump({"items": items}, sys.stdout, ensure_ascii=False)
+    # ASCII-escaped on purpose: the output is then valid whatever locale or
+    # encoding the script happens to be started with.
+    json.dump({"items": items}, sys.stdout)
 
 
 def message(title, subtitle=""):
@@ -182,9 +185,14 @@ def cmd_open_in(query):
         # No URL typed: fall back to the clipboard and treat the query as a filter.
         needle = query
         try:
+            # Ask for UTF-8 explicitly: without a locale, pbpaste turns
+            # non-ASCII characters into "?".
             clip = subprocess.run(
-                ["pbpaste"], capture_output=True, text=True, timeout=2
-            ).stdout
+                ["pbpaste"],
+                capture_output=True,
+                timeout=2,
+                env=dict(os.environ, LC_ALL="en_US.UTF-8"),
+            ).stdout.decode("utf-8", "replace")
         except (OSError, subprocess.SubprocessError):
             clip = ""
         url = normalize_url(clip)
@@ -222,17 +230,37 @@ end tell
 
 
 def osascript(source):
+    # osascript always writes UTF-8, so decode it as such regardless of locale.
     return subprocess.run(
-        ["osascript", "-e", source], capture_output=True, text=True, timeout=10
+        ["osascript", "-e", source],
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=30,
     )
 
 
 def cmd_move_tab():
     profiles = profiles_or_error()
-    result = osascript(FRONT_TAB_SCRIPT % CHROME_APP)
+    try:
+        result = osascript(FRONT_TAB_SCRIPT % CHROME_APP)
+    except subprocess.TimeoutExpired:
+        # Usually the macOS prompt asking to let Alfred control the browser.
+        emit([message("%s did not answer" % CHROME_APP, "Allow the permission prompt if one is showing, then try again")])
+        return
     parts = result.stdout.rstrip("\n").split("\n", 2)
     if result.returncode != 0:
-        emit([message("Can't talk to Chrome", result.stderr.strip())])
+        if "-1743" in result.stderr:
+            emit(
+                [
+                    message(
+                        "Alfred is not allowed to control %s" % CHROME_APP,
+                        "Turn it on in System Settings › Privacy & Security › Automation",
+                    )
+                ]
+            )
+        else:
+            emit([message("Can't talk to %s" % CHROME_APP, result.stderr.strip())])
         return
     if len(parts) < 2 or not parts[1]:
         emit([message("No Chrome tab to move", "Chrome has no open window")])
@@ -259,7 +287,10 @@ def cmd_open():
         command.append(url)
     subprocess.run(command, check=True)
     if url and tab_id.isdigit():
-        osascript(CLOSE_TAB_SCRIPT % (CHROME_APP, tab_id))
+        try:
+            osascript(CLOSE_TAB_SCRIPT % (CHROME_APP, tab_id))
+        except subprocess.TimeoutExpired:
+            pass  # The page is already open in the new profile; leave the old tab.
 
 
 def main():

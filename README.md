@@ -1,40 +1,64 @@
 # Chrome Profiles — Alfred workflow
 
-Open links, bookmarks and tabs in the Chrome profile you choose, instead of
-whichever profile Chrome happened to use last.
+<img src="icon.png" width="96" alt="">
 
-## Usage
-
-| Trigger | What it does |
-|---|---|
-| `cm [profile]` | Move the front Chrome tab to another profile: reopens it there and closes it here. |
-| `co [url] [profile]` | Pick a profile for a URL. With no URL typed, the URL on the clipboard is used. |
-| `cb <query>` | Search bookmarks from every profile. ↩ opens in the bookmark's own profile, ⌘↩ picks another. |
-| `cp [profile]` | Open a new Chrome window in a profile. |
-| Universal Action **Open in Chrome Profile…** | Same as `co`, for a selected URL or a clipboard-history entry. |
-
-The workflow also has two unassigned Hotkey triggers, for `cm` and `co`.
+Open links, bookmarks and tabs in the Google Chrome profile you choose,
+instead of whichever profile Chrome happened to use last.
 
 ## Install
 
-```sh
-python3 build.py                     # writes info.plist and Chrome-Profiles.alfredworkflow
-open Chrome-Profiles.alfredworkflow  # import into Alfred
-```
+Download `Chrome-Profiles.alfredworkflow` from the
+[latest release](https://github.com/dtes8617/alfred-chrome-profiles/releases/latest)
+and open it.
 
-Requires Alfred with the Powerpack (built on Alfred 6), Google Chrome, and
-`/usr/bin/python3` (installed with the Xcode Command Line Tools).
+Requires [Alfred](https://www.alfredapp.com) with the Powerpack, Google Chrome,
+and `/usr/bin/python3`, which macOS provides once the Xcode Command Line Tools
+are installed (`xcode-select --install`).
 
-## Notes
+## Usage
 
-- The first `cm` run asks for permission for Alfred to control Google Chrome.
-- `cm` reloads the page in the new profile, so unsaved form input in the old tab is lost.
-- `cp` always opens a new window; Chrome does not tell scripts which profile a window belongs to.
-- Profiles are read from `~/Library/Application Support/Google/Chrome/Local State`.
-  Set the `chrome_dir` / `chrome_app` environment variables in the workflow to
-  point at a different Chromium-based browser.
+Search the bookmarks of all your Google Chrome profiles via the `chb` keyword.
 
-## Layout
+* <kbd>↩︎</kbd> Open in the bookmark's own profile.
+* <kbd>⌘</kbd><kbd>↩︎</kbd> Choose another profile.
 
-- `chrome.py` — all the logic: three Script Filters plus the open action.
-- `build.py` — generates `info.plist` and packages the workflow.
+Open a URL in a specific profile via the `cho` keyword. Type the URL, or leave
+it out to use the one on your clipboard. Add part of a profile's name or email
+to narrow the list.
+
+Alternatively, open a selected URL in a specific profile via the Universal
+Action.
+
+Move the frontmost tab to another profile via the `chm` keyword. The page
+reopens in the profile you pick and the original tab closes.
+
+Open a new Google Chrome window in a specific profile via the `chp` keyword.
+
+Configure the Hotkeys as shortcuts to move the frontmost tab and to open the
+copied URL.
+
+## Configuration
+
+All four keywords can be changed in the workflow's configuration
+(**Configure Workflow…** in Alfred Preferences).
+
+## Good to know
+
+- The first time you move a tab, macOS asks whether Alfred may control Google
+  Chrome. Moving a tab needs that permission; the other features do not.
+- Moving a tab reloads the page in the new profile, so unsaved form input in
+  the original tab is lost.
+- Opening a profile always opens a new window. Chrome does not tell scripts
+  which profile a window belongs to, so an existing window cannot be focused.
+- Everything runs on your Mac. The workflow reads Chrome's `Local State` and
+  `Bookmarks` files and sends nothing anywhere.
+
+## Development
+
+- `chrome.py` holds all the logic: four Script Filters and the open action.
+- `build.py` generates `info.plist` and packages the workflow:
+
+  ```sh
+  python3 build.py
+  open Chrome-Profiles.alfredworkflow
+  ```

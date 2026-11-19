@@ -1,5 +1,8 @@
 # Build output of build.py
 *.alfredworkflow
 
+# Alfred stores each user's own configuration values here
+prefs.plist
+
 __pycache__/
 .DS_Store

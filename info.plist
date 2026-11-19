@@ -52,7 +52,7 @@
 				<key>modifiers</key>
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
-				<string>Choose a different profile…</string>
+				<string>Choose another profile…</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -111,9 +111,9 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string></string>
+	<string>dtes8617</string>
 	<key>description</key>
-	<string>Open links, bookmarks and tabs in the right Chrome profile</string>
+	<string>Open links, bookmarks and tabs in the Chrome profile you choose</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -136,7 +136,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>cb</string>
+				<string>{var:keyword_bookmarks}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -154,9 +154,9 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>Search bookmarks across all profiles (⌘↩ to pick another profile)</string>
+				<string>Bookmarks from every profile</string>
 				<key>title</key>
-				<string>Chrome bookmarks</string>
+				<string>Search Chrome bookmarks</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -185,7 +185,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>co</string>
+				<string>{var:keyword_open_in}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -203,9 +203,9 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>co [url] [profile] — uses the clipboard when no URL is typed</string>
+				<string>Type a URL, or leave it out to use the one on your clipboard</string>
 				<key>title</key>
-				<string>Open URL in Chrome profile…</string>
+				<string>Open URL in a Chrome profile</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -234,7 +234,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>cm</string>
+				<string>{var:keyword_move_tab}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -252,9 +252,9 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>Reopen the front tab in another profile and close it here</string>
+				<string>Reopens the page in the profile you pick and closes the original tab</string>
 				<key>title</key>
-				<string>Move current Chrome tab to profile…</string>
+				<string>Move the frontmost Chrome tab to a profile</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -283,7 +283,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>cp</string>
+				<string>{var:keyword_profiles}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -301,9 +301,9 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>Open a new Chrome window in the profile you pick</string>
+				<string>Opens a new window in the profile you pick</string>
 				<key>title</key>
-				<string>Open Chrome profile…</string>
+				<string>Open a Chrome profile</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -424,16 +424,22 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Open links, bookmarks and tabs in the Chrome profile you choose.
+	<string>## Usage
 
-• cb &lt;query&gt; — search bookmarks from every profile. ↩ opens in the bookmark's own profile, ⌘↩ lets you pick another.
-• co [url] [profile] — pick a profile for a URL. With no URL, the clipboard is used.
-• cm [profile] — move the front Chrome tab to another profile (reopens it there, closes it here).
-• cp [profile] — open a new Chrome window in the profile you pick.
-• Universal Action “Open in Chrome Profile…” — works on any selected URL/text or clipboard-history entry.
-• Two empty Hotkey triggers are included for cm and co — double-click them to assign keys.
+Search the bookmarks of all your Google Chrome profiles via the `chb` keyword.
 
-The first cm run asks for permission for Alfred to control Google Chrome.</string>
+* &lt;kbd&gt;↩︎&lt;/kbd&gt; Open in the bookmark's own profile.
+* &lt;kbd&gt;⌘&lt;/kbd&gt;&lt;kbd&gt;↩︎&lt;/kbd&gt; Choose another profile.
+
+Open a URL in a specific profile via the `cho` keyword. Type the URL, or leave it out to use the one on your clipboard. Add part of a profile's name or email to narrow the list.
+
+Alternatively, open a selected URL in a specific profile via the Universal Action.
+
+Move the frontmost tab to another profile via the `chm` keyword. The page reopens in the profile you pick and the original tab closes.
+
+Open a new Google Chrome window in a specific profile via the `chp` keyword.
+
+Configure the Hotkeys as shortcuts to move the frontmost tab and to open the copied URL.</string>
 	<key>uidata</key>
 	<dict>
 		<key>ACT-OPEN</key>
@@ -446,7 +452,7 @@ The first cm run asks for permission for Alfred to control Google Chrome.</strin
 		<key>HK-MOVE-TAB</key>
 		<dict>
 			<key>note</key>
-			<string>Set a hotkey: move front tab</string>
+			<string>Move the frontmost tab</string>
 			<key>xpos</key>
 			<integer>40</integer>
 			<key>ypos</key>
@@ -455,7 +461,7 @@ The first cm run asks for permission for Alfred to control Google Chrome.</strin
 		<key>HK-OPEN-IN</key>
 		<dict>
 			<key>note</key>
-			<string>Set a hotkey: open clipboard URL</string>
+			<string>Open the copied URL</string>
 			<key>xpos</key>
 			<integer>40</integer>
 			<key>ypos</key>
@@ -498,10 +504,95 @@ The first cm run asks for permission for Alfred to control Google Chrome.</strin
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
-	<array/>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>chb</string>
+				<key>placeholder</key>
+				<string>chb</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Search the bookmarks of every profile.</string>
+			<key>label</key>
+			<string>Bookmarks Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword_bookmarks</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>cho</string>
+				<key>placeholder</key>
+				<string>cho</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Open a typed or copied URL in the profile you pick.</string>
+			<key>label</key>
+			<string>Open URL Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword_open_in</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>chm</string>
+				<key>placeholder</key>
+				<string>chm</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Move the frontmost tab to another profile.</string>
+			<key>label</key>
+			<string>Move Tab Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword_move_tab</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>chp</string>
+				<key>placeholder</key>
+				<string>chp</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Open a new window in a profile.</string>
+			<key>label</key>
+			<string>Open Profile Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword_profiles</string>
+		</dict>
+	</array>
 	<key>version</key>
-	<string>1.1.0</string>
+	<string>1.2.0</string>
 	<key>webaddress</key>
-	<string></string>
+	<string>https://github.com/dtes8617/alfred-chrome-profiles</string>
 </dict>
 </plist>
