@@ -1,0 +1,5 @@
+# Build output of build.py
+*.alfredworkflow
+
+__pycache__/
+.DS_Store
